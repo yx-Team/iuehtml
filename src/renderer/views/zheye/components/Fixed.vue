@@ -1,0 +1,42 @@
+<template>
+    <div class="fixed-tool">
+        <a class="fixed-tool-btn" @click="handleTop" href="javascript:;"><i class="iconfont icon-huidaodingbu"></i></a>
+    </div>
+</template>
+
+<script>
+export default {
+  name: 'Fixed',
+
+  methods: {
+    handleTop () {
+      this.$emit('top')
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.fixed-tool {
+  position: fixed;
+  right: 10px;
+  bottom: 50px;
+  z-index: 999;
+  &-btn{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #6175e8;
+      color: #fff;
+      font-size: 28px;
+      transition: all .3s;
+      &:hover{
+        color: #fff;
+        box-shadow:0 5px 15px rgba(126,34,137,0.3);
+      }
+  }
+}
+</style>
