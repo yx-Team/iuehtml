@@ -35,9 +35,10 @@ export default {
   },
   async created () {
     let that = this
-    this.$db.history.find({}).sort({sort: -1}).limit(12).exec(function (err, doc) {
+    this.$db.history.find({}).sort({sort: -1, update_time: -1}).limit(12).exec(function (err, doc) {
       if (err) console.log(err)
       that.history = doc
+      that.$store.commit('SET_DOM_UPDATE')
     })
   },
   methods: {
@@ -59,7 +60,7 @@ export default {
     &-history{
         background: #fff;
         border-radius: 4px;
-        padding: 15px 0;
+        padding: 15px 15px;
         box-shadow:0 5px 15px rgba(126,34,137,0.08);
         margin-bottom: 20px;
         

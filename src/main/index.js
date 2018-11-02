@@ -1,6 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow } from 'electron'
+// import axios from 'axios'
 // import cheerio from 'cheerio'
 /**
  * Set `__static` path to static files in production
@@ -25,7 +26,7 @@ function createWindow () {
     useContentSize: false,
     width: 1200,
     show: false,
-    // frame: false,
+    frame: false,
     resizable: false,
     icon: '../../build/icons/256x256.png',
     backgroundColor: '#fff',
@@ -87,10 +88,17 @@ app.on('ready', () => {
 })
  */
 
-// 爬虫
-// const $ = cheerio.load('<h2 class="title">Hello world</h2>')
-
-// $('h2.title').text('Hello there!')
-// $('h2').addClass('welcome')
-
-// console.log($.html())
+// // 爬虫
+// let weburl = 'https://www.zcool.com.cn/discover/17!0!0!0!0!!!!3!-1!1'
+// axios.get(weburl).then(res => {
+//   const $ = cheerio.load(res.data)
+//   let arr = []
+//   $('.work-list-box').find('.card-box').each(function (index, item) {
+//     arr.push({
+//       title: $(item).find('.card-img-hover').attr('title'),
+//       link: $(item).find('.card-img-hover').attr('href'),
+//       author: $(item).find('.user-avatar').find('a').attr('title')
+//     })
+//   })
+//   console.log(arr)
+// })

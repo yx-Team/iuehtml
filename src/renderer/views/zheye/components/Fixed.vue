@@ -10,7 +10,8 @@ export default {
 
   methods: {
     handleTop () {
-      this.$emit('top')
+      this.$store.commit('SET_SIDE_INDEX', 0)
+      this.$store.commit('SET_CON_INDEX', 0)
     }
   }
 }

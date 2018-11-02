@@ -1,18 +1,40 @@
 <template>
     <div class="zheye-side">
-      <swiper style="height:100%" :options="swiperOption">
-        <swiper-slide class="zheye-side-slide">
+      <swiper style="height:100%" ref="sideSwiper" :options="swiperOption">
+        <!-- <swiper-slide class="zheye-side-slide">
           <ul>
             <li class="zheye-side-item"
-              :class="{'is-active':index===cindex}"
+              :class="{'is-active':cindex===0}"
+              @click="handle(0)"
+              >
+              <span>每日推荐</span>
+              </li>
+            <li class="zheye-side-item"
+              :class="{'is-active':(index+1)===cindex}"
               v-for="(item,index) in cate"
               :key="index"
-              @click="handle(index)"
+              @click="handle(index+1)"
               >
               <span>{{item.title}}</span>
               </li>
           </ul>
+        </swiper-slide> -->
+        <swiper-slide 
+          class="zheye-side-item"
+          :class="{'is-active':cindex===0}"
+          
+        >
+         <span @click="handle(0)">每日推荐</span>
         </swiper-slide>
+        <swiper-slide 
+            class="zheye-side-item"
+            :class="{'is-active':(index+1)===cindex}"
+            v-for="(item,index) in cate"
+            :key="index+1"
+        >
+          <span @click="handle(index+1)">{{item.title}}</span>
+        </swiper-slide>
+          
         <!-- <div class="swiper-scrollbar" slot="scrollbar"></div> -->
       </swiper>
     </div>
@@ -21,14 +43,12 @@
 <script>
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-// import { getCate } from '@/api/zheye'
 import {mapState} from 'vuex'
 export default {
   name: 'Side',
   data () {
     return {
       // cate: [],
-      cindex: 0,
       swiperOption: {
         direction: 'vertical',
         slidesPerView: 'auto',
@@ -39,21 +59,23 @@ export default {
       }
     }
   },
+  watch: {
+    cindex (val) {
+      this.$refs.sideSwiper.swiper.slideTo(val, 500, false)
+    }
+  },
   computed: {
     ...mapState(
-      {cate: state => state.Zheye.cate}
+      {
+        cate: state => state.Zheye.cate,
+        cindex: state => state.Zheye.sideIndex
+      }
     )
   },
-  // async created () {
-  //   const cate = await getCate()
-  //   if (cate.data.success) {
-  //     this.cate = cate.data.data
-  //   }
-  // },
   methods: {
     handle (index) {
-      this.cindex = index
-      this.$emit('click', index)
+      this.$store.commit('SET_SIDE_INDEX', index)
+      this.$store.commit('SET_CON_INDEX', index)
     }
   },
   components: {

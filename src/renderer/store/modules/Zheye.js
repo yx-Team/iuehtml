@@ -6,19 +6,32 @@ import { getCate, getList } from '@/api/zheye'
 const state = {
   // 历史总数
   historyCount: 0,
+  sideIndex: 0,
+  conIndex: 0,
   cate: [],
-  zheye: []
+  zheye: [],
+  domUpdate: 1
+
 }
 
 const mutations = {
   SET_HISTORY_COUNT (state, count) {
     return (state.historyCount = count)
   },
+  SET_SIDE_INDEX (state, index) {
+    return (state.sideIndex = index)
+  },
+  SET_CON_INDEX (state, index) {
+    return (state.conIndex = index)
+  },
   SET_CATEGORY (state, payload) {
     return (state.cate = payload)
   },
   SET_ALL_ZHEYE (state, payload) {
     return (state.zheye = payload)
+  },
+  SET_DOM_UPDATE (state) {
+    state.domUpdate++
   }
 
 }
@@ -36,9 +49,10 @@ const actions = {
     try {
       if (!hasData) {
         item.sort = total
+        item.update_time = new Date().getTime()
         result = await history.insert(item)
       } else {
-        result = await history.update({title: item.title}, {$set: {sort: total}})
+        result = await history.update({title: item.title}, {$set: {sort: total, update_time: new Date().getTime()}})
       }
     } catch (error) {
       console.log(error)

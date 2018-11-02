@@ -4,10 +4,10 @@
       <z-header></z-header>
       <div class="page-zheye-container" :style="{height:iHeight+'px'}">
         <!-- 侧边栏 -->
-        <z-side @click="goto"></z-side>
+        <z-side></z-side>
         <!-- 内容 -->
         <div :style="{width:contentWidth+'px',height:'100%'}">
-          <z-card v-model="currentIndex"></z-card>
+          <z-card></z-card>
         </div>
       </div>
      
@@ -55,9 +55,6 @@ export default {
     },
     setContentHeight () {
       this.contentWidth = document.documentElement.clientWidth - 250
-    },
-    goto (index) {
-      this.currentIndex = index
     }
   },
   components: {

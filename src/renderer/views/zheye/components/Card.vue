@@ -1,12 +1,12 @@
 <template>
 <div class="zheye-card">
       <swiper ref="cardSwiper" :options="swiperOption" style="height:100%;">
-        <swiper-slide :span="24" v-for="(cate,cindex) in cateList" :key="cindex">
+        <swiper-slide :span="24">
           <el-row :gutter="20">
             <el-col class="web-card" >
               <div style="padding-right:20px">
                  <!-- 搜索、公告 -->
-                <template v-if="cindex===0">
+                <template>
                   <div class="zheye-card-hd">
                     <z-search></z-search>
                     <el-alert
@@ -19,7 +19,18 @@
                   <div style="height:20px;"></div>
                 </template>
                 <!-- 历史记录 -->
-                <z-history v-if="cindex===0 && historyCount"></z-history>
+                <z-history v-if="historyCount"></z-history>
+                <!-- 推荐 -->
+                <z-recommend></z-recommend>
+              </div>
+            </el-col>
+          </el-row>
+        </swiper-slide>
+        <swiper-slide :span="24" v-for="(cate,cindex) in cateList" :key="cindex">
+          <el-row :gutter="20">
+            <el-col class="web-card" >
+              <div style="padding-right:20px">
+                
                 <!-- 所有网址 -->
                 <el-card >
                   <div slot="header" class="clearfix">
@@ -46,26 +57,23 @@
         <div class="swiper-scrollbar" slot="scrollbar"></div>
       </swiper>
       <!-- 右侧浮动组件 -->
-      <z-fixed @top="returnTop"></z-fixed>
+      <z-fixed></z-fixed>
       
   </div>  
 </template>
 
 <script>
+
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import ZSearch from './Search.vue'
 import ZHistory from './History.vue'
+import ZRecommend from './Recommend.vue'
 import ZFixed from './Fixed'
 import {mapState} from 'vuex'
 // import { getList, getCate } from '@/api/zheye'
 import 'swiper/dist/css/swiper.css'
 export default {
   name: 'Card',
-  props: {
-    value: {
-      type: Number
-    }
-  },
   data () {
     return {
       currentCate: [],
@@ -90,13 +98,15 @@ export default {
     }
   },
   watch: {
-    value (val) {
+    conIndex (val) {
       this.$refs.cardSwiper.swiper.slideTo(val, 500, false)
     },
-    historyCount (val) {
-      setTimeout(() => {
-        this.$refs.cardSwiper.update()
-      }, 1000)
+    domUpdate (val) {
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.$refs.cardSwiper.update()
+        }, 2000)
+      })
     },
     cate (val) {
       this.currentCate = val
@@ -110,7 +120,9 @@ export default {
       {
         historyCount: state => state.Zheye.historyCount,
         cate: state => state.Zheye.cate,
-        list: state => state.Zheye.zheye
+        list: state => state.Zheye.zheye,
+        conIndex: state => state.Zheye.conIndex,
+        domUpdate: state => state.Zheye.domUpdate
       }
 
     )
@@ -128,7 +140,9 @@ export default {
       this.$message.error('获取数据出错了~……~ ！！！ 请联系客服解决问题')
     }
   },
-
+  mounted () {
+    this.onScrollEnd()
+  },
   methods: {
     // 组合数据
     getCateList () {
@@ -153,15 +167,22 @@ export default {
       this.$electron.shell.openExternal(item.link)
       await this.$store.dispatch('saveHistory', item)
     },
-    // 返回顶部
-    returnTop () {
-      this.$refs.cardSwiper.swiper.slideTo(0, 500, false)
+    // 监听滚动结束，是第几个slider
+    onScrollEnd () {
+      var that = this
+      setTimeout(() => {
+        this.$refs.cardSwiper.swiper.on('transitionEnd', function () {
+          console.log(this.activeIndex)
+          that.$store.commit('SET_SIDE_INDEX', this.activeIndex)
+        })
+      }, 1000)
     }
 
   },
   components: {
     ZSearch,
     ZHistory,
+    ZRecommend,
     ZFixed,
     swiper,
     swiperSlide
