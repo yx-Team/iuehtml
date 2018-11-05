@@ -99,7 +99,8 @@ export default {
   },
   watch: {
     conIndex (val) {
-      this.$refs.cardSwiper.swiper.slideTo(val, 500, false)
+      this.conScrollTo(val)
+      // this.$refs.cardSwiper.swiper.slideTo(val, 500, false)
     },
     domUpdate (val) {
       this.$nextTick(() => {
@@ -167,15 +168,21 @@ export default {
       this.$electron.shell.openExternal(item.link)
       await this.$store.dispatch('saveHistory', item)
     },
-    // 监听滚动结束，是第几个slider
+    // 监听触摸滚动结束，是第几个slider
     onScrollEnd () {
       var that = this
       setTimeout(() => {
-        this.$refs.cardSwiper.swiper.on('transitionEnd', function () {
-          console.log(this.activeIndex)
+        // this.$refs.cardSwiper.swiper.on('transitionEnd', function () {
+        // that.$store.commit('SET_SIDE_INDEX', this.activeIndex)
+        // })
+        // 鼠标滚轮，拖拽都可以触发slideChange
+        this.$refs.cardSwiper.swiper.on('slideChange', function () {
           that.$store.commit('SET_SIDE_INDEX', this.activeIndex)
         })
       }, 1000)
+    },
+    conScrollTo (val = 0) {
+      this.$refs.cardSwiper.swiper.slideTo(val, 500, false)
     }
 
   },

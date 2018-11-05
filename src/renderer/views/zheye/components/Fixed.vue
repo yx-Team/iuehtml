@@ -1,6 +1,6 @@
 <template>
     <div class="fixed-tool">
-        <a class="fixed-tool-btn" @click="handleTop" href="javascript:;"><i class="iconfont icon-huidaodingbu"></i></a>
+        <a class="fixed-tool-btn" @click="handleTop"><i class="iconfont icon-huidaodingbu"></i></a>
     </div>
 </template>
 
@@ -10,8 +10,11 @@ export default {
 
   methods: {
     handleTop () {
-      this.$store.commit('SET_SIDE_INDEX', 0)
+      if (this.$store.state.Zheye.conIndex === 0) {
+        this.$parent.conScrollTo()
+      }
       this.$store.commit('SET_CON_INDEX', 0)
+      this.$store.commit('SET_SIDE_INDEX', 0)
     }
   }
 }
@@ -34,6 +37,7 @@ export default {
       color: #fff;
       font-size: 28px;
       transition: all .3s;
+      cursor: pointer;
       &:hover{
         color: #fff;
         box-shadow:0 5px 15px rgba(126,34,137,0.3);
